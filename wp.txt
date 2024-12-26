@@ -1,0 +1,294 @@
+<style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 100px;
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+    }
+
+    .search-container {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 10px;
+      position: relative;
+    }
+
+    input {
+      flex: 1;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      padding: 14px 16px;
+      font-size: 15px;
+      border: none;
+      background-color: #333;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    .suggestions {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: white;
+      position: absolute;
+      width: calc(100% - 10px);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      top: calc(100% + 5px);
+      left: 0;
+    }
+
+    .suggestion {
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    .suggestion:hover {
+      background: #f1f1f1;
+    }
+
+    .results {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .result-item {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #ffffff;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-item strong {
+      color: #333;
+      font-size: 1.1em;
+    }
+
+    .result-item span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .no-results {
+      text-align: center;
+      font-size: 1.2em;
+      color: #777;
+    }
+
+    footer {
+      margin-top: auto;
+      font-size: 12px;
+      text-align: center;
+      color: #888;
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+    }
+
+    footer a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .copy-btn {
+      padding: 8px 12px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .copy-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <input id="searchInput" type="text" placeholder="Search by area, name, position, or phone">
+    <button onclick="searchData()">Search</button>
+    <div id="suggestions" class="suggestions"></div>
+  </div>
+  <div class="results" id="results"></div>
+
+  <footer>
+    Developed by <a href="https://alimranakanda.com" target="_blank">Al-Imran Akanda</a>
+  </footer>
+
+  <script>
+    // Static data from CSV file (converted into JavaScript array)
+    const csvData = [
+      ["National", "Hamidur Rahman", "NSM", "01730704902"],
+      ["Dhaka", "Mozammel Hossain", "RSM", "01730704935"],
+      ["Nawabpur", "Mozammel Hossain", "RSM", "01730704935"],
+      ["Mirpur, Mohammadpur", "Masudur Rahman", "Sr. Sales Executive", "01730704911"],
+      ["Gulshan, Badda, Uttara", "Saiful Islam", "Sales Executive", "01708491936"],
+      ["Savar, Manikganj", "Mahamudul Hasan", "Sales Executive", "01711485006"],
+      ["Gazipur", "Zobayer Hossain", "Sales Executive", "01709649069"],
+      ["Munsiganj, Nababganj, Dohar", "Mahid Hasan", "Sales Executive", "01709649066"],
+      ["Narayanganj, Sonargaon", "Zahidul Islam", "Sales Executive", "01730404905"],
+      ["Mymensingh, Netrokona", "Zahidul Islam", "Sales Executive", "01730704929"],
+      ["Kishoregonj", "Abu Sayem", "Sales Executive", "01916210070"],
+      ["Jamalpur", "Ariful Islam", "Sales Executive", "01730704906"],
+      ["Sherpur", "Rafiqul Islam ", "Sr. Sales Executive", "01708-491933"],
+      ["Tangail", "Motalleb Hossain", "Sales Executive", "01730704907"],
+      ["Sylhet", "Sujit Kumar Biswas", "Zonal Sales Manager", "01730704909"],
+      ["Moulovibazar", "Mahamudul Hasan", "Sales Executive", "01730704914"],
+      ["Hobigonj", "Swadhin Pual", "Sales Executive", "01781139270"],
+      ["Narsingdi, Bhoirob", "Mohammad Sabuz", "Sales Executive", "01730704903"],
+      ["Cumilla Division", "Saifuddin Ahmed", "Deputy National Sales Manager", "01730704921"],
+      ["Cumilla,Chandpur", "Sadat Hossain", "Sales Executive", "01730704904"],
+      ["Noakhali, Laxmipur, Feni", "Badsha Ala", "Sales Executive", "01730704923"],
+      ["Brahmanbaria", "Sohanur Rahman", "Sales Executive", "01737313930"],
+      ["Chattogram, Fatikchari", "Sazzadur Rahman Mondol", "Zonal Sales Manager", "01709649061"],
+      ["Cox's Bazar", "Nizam Uddin", "Sales Executive", "01709649063"],
+      ["Rangpur Division", "Aminur Rahman", "Deputy National Sales Manager", "01730704934"],
+      ["Rangpur", "Sabbir Ahmed", "Sales Executive", "01313354652"],
+      ["Kurigram, Lalmonirhat", "Mydul Islam", "Sales Executive", "01709649062"],
+      ["Gaibandha, Palashbari", "Rashedul Islam", "Sales Executive", "01708491923"],
+      ["Nilphamari, Saidpur", "Tarak-ul Islam Tarakn", "Jr. Sales Executive", "01708491924"],
+      ["Thakurgaon, Dinajpur, Panchagarh", "Tasharraf Hossain", "Sales Executive", "01730704920"],
+      ["Rajshahi", "Torikul Islam", "Zonal Sales Manager", "01730704938"],
+      ["Chapai Nawabganj", "Shis Mohammad", "Sales Executive", "01738215807"],
+      ["Bogra", "Enamul Haque", "Sales Executive", "01709649064"],
+      ["Pabna, Sirajganj", "Nazmul Huda", "Sr. Sales Executive", "01708491922"],
+      ["Khulna Division", "Ohidur Zaman", "Deputy National Sales Manager", "01730704943"],
+      ["Khulna District", "Mahabubul Islam", "Sales Executive", "01730704948"],
+      ["Bagerhat, Satkhira", "Sujon Ali", "Sales Executive", "01730704950"]
+    ];
+
+    // Display suggestions
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      const suggestions = document.getElementById('suggestions');
+      suggestions.innerHTML = '';
+
+      if (query) {
+        const matches = csvData.filter(row =>
+          row.some(cell => cell.toLowerCase().includes(query))
+        );
+        matches.slice(0, 10).forEach(match => {
+          const suggestion = document.createElement('div');
+          suggestion.className = 'suggestion';
+          suggestion.textContent = `${match[1]} (${match[0]}) - ${match[3]}`;
+          suggestion.onclick = () => {
+            searchInput.value = match[3];
+            suggestions.innerHTML = '';
+          };
+          suggestions.appendChild(suggestion);
+        });
+      }
+    });
+
+    // Enable "Enter" key to trigger search
+    searchInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        searchData();
+      }
+    });
+
+    // Search and display results
+    function searchData() {
+      const query = searchInput.value.toLowerCase();
+      const results = csvData.filter(row =>
+        row.some(cell =>
+          cell.split(',').some(part => part.toLowerCase().includes(query))
+        )
+      );
+
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
+      if (results.length) {
+        results.forEach(row => {
+          const area = formatArea(row[0]);
+
+          const resultItem = document.createElement('div');
+          resultItem.className = 'result-item';
+          resultItem.innerHTML = `
+            <div>
+              <strong>${row[1]}</strong>
+              <span>${row[2]}</span>
+              <span>${area} Zone</span>
+              <span>MEWL, MEL Group</span>
+              <span>+88${row[3]}</span>
+            </div>
+            <button class="copy-btn" onclick="copyTextFormatted('${row[1]}', '${row[2]}', '${area} Zone', '+88${row[3]}')">Copy</button>
+          `;
+          resultsContainer.appendChild(resultItem);
+        });
+      } else {
+        resultsContainer.innerHTML = '<div class="no-results">No results found.</div>';
+      }
+    }
+
+    function formatArea(areaString) {
+      const areas = areaString.split(',');
+      if (areas.length === 2) {
+        return areas.join(' & ');
+      } else if (areas.length > 2) {
+        const lastArea = areas.pop();
+        return areas.join(', ') + ' & ' + lastArea;
+      }
+      return areas[0];
+    }
+
+    // Copy formatted text with line breaks
+    function copyTextFormatted(name, position, area, phone) {
+      const formattedText = `
+${name}
+${position}
+${area}
+MEWL, MEL Group
+${phone}
+      `;
+      const textArea = document.createElement('textarea');
+      textArea.value = formattedText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Copied to clipboard!');
+    }
+  </script>

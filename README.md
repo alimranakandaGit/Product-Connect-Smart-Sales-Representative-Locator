@@ -1,6 +1,6 @@
 # Lookup Tool Website
 
-This project is a lightweight, responsive Lookup web page developed using pure HTML, CSS, and JavaScript. It was originally created for alimranakanda.com as a simple, fast, and user-friendly tool to browse information efficiently.
+This project is a lightweight, responsive Lookup web page developed using pure HTML, CSS, and JavaScript. It was created for melmartbd.com/connect as a simple, fast, and user-friendly tool to browse information efficiently.
 
 ## 🚀 Live Website
 👉 [Visit Live Site](https://alimranakanda.com/lookup/)

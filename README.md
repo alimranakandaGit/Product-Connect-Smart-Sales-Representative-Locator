@@ -1,6 +1,6 @@
 # Lookup Tool Website
 
-This project is a lightweight, responsive Lookup web page developed using pure HTML, CSS, and JavaScript. It was created for melmartbd.com/connect as a simple, fast, and user-friendly tool to browse information efficiently.
+This project is a lightweight, responsive Lookup web page developed using pure HTML, CSS, and JavaScript. It was created for [MEL MART BD](https://www.melmartbd.com/connect/) as a simple, fast, and user-friendly tool to browse information efficiently.
 
 ## 🚀 Live Website
 👉 [Visit Live Site](https://alimranakanda.com/lookup/)
@@ -22,9 +22,8 @@ This project is a lightweight, responsive Lookup web page developed using pure H
 
 *(Tip: You can replace this placeholder link with your own screenshot later.)*
 
-## 📂 How to Run
-- Download or clone this repository.
-- Open the `index.html` file in your web browser.
+## 📂 How to Run it?
+- The full project has not been uploaded to GitHub for specific reasons. As the project is continuously being updated, downloading and using the uploaded documents alone may not function properly. Therefore, it is advised to refer to the "View Source" link of the mentioned website for personal or educational purposes.
 
 ## 👨‍💻 Author
 - **Al Imran Akanda**
